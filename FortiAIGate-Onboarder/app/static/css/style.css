@@ -1,0 +1,512 @@
+/* FortiAIGate Onboarder — Fortinet red/dark theme over Pico.css */
+
+:root {
+    --fortinet-red: #ee0000;
+    --fortinet-red-bright: #ff2a2a;
+    --fortinet-red-dark: #aa0000;
+    --bg-darkest: #0a0a0a;
+    --bg-dark: #141414;
+    --bg-card: #1c1c1c;
+    --bg-card-hi: #252525;
+    --text-bright: #f5f5f5;
+    --text-dim: #999;
+    --border: #333;
+    --border-hi: #444;
+    --ok: #4ade80;
+    --warn: #fb923c;
+    --bad: #ef4444;
+}
+
+/* Override Pico's defaults */
+:root[data-theme="dark"],
+[data-theme="dark"] {
+    --pico-primary: var(--fortinet-red);
+    --pico-primary-hover: var(--fortinet-red-bright);
+    --pico-primary-focus: rgba(238, 0, 0, 0.25);
+    --pico-primary-inverse: #fff;
+    --pico-background-color: var(--bg-darkest);
+    --pico-card-background-color: var(--bg-card);
+    --pico-card-border-color: var(--border);
+    --pico-form-element-background-color: var(--bg-dark);
+    --pico-form-element-border-color: var(--border-hi);
+    --pico-color: var(--text-bright);
+}
+
+body {
+    background: var(--bg-darkest);
+    color: var(--text-bright);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+[x-cloak] { display: none !important; }
+
+/* ============================================================ topbar */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-dark);
+    border-bottom: 2px solid var(--fortinet-red);
+    box-shadow: 0 2px 12px rgba(238,0,0,0.15);
+}
+
+.brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+.brand-red { color: var(--fortinet-red); }
+.brand-sub {
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    margin-left: 0.5rem;
+    border-left: 1px solid var(--border-hi);
+    padding-left: 0.6rem;
+}
+
+.tabs {
+    display: flex;
+    gap: 0.25rem;
+    flex: 1;
+    margin-left: 1rem;
+}
+.tabs button {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid transparent;
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin: 0;
+    width: auto;
+}
+.tabs button:hover {
+    background: var(--bg-card);
+    color: var(--text-bright);
+}
+.tabs button.active {
+    background: var(--bg-card);
+    color: var(--fortinet-red);
+    border-color: var(--fortinet-red);
+}
+
+.conn-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--bg-card);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    border: 1px solid var(--border);
+}
+.conn-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bad);
+}
+.conn-pill.ok .dot { background: var(--ok); }
+.conn-pill button.link {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.4rem;
+    width: auto;
+}
+
+/* ============================================================ main */
+
+main.container {
+    max-width: 1100px;
+    padding: 2rem 1.5rem;
+}
+
+article {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+}
+article header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+}
+article header h2, article header h3 {
+    margin: 0;
+    color: var(--text-bright);
+}
+article footer {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+/* ============================================================ forms */
+
+label {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--text-bright);
+    font-weight: 500;
+}
+input, select, textarea {
+    background: var(--bg-dark) !important;
+    color: var(--text-bright) !important;
+    border: 1px solid var(--border-hi) !important;
+    border-radius: 4px;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: var(--fortinet-red) !important;
+    box-shadow: 0 0 0 3px rgba(238,0,0,0.2) !important;
+}
+small {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+}
+small.block { display: block; }
+small.warn { color: var(--warn); }
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.row.between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+button {
+    background: var(--fortinet-red);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+button:hover { background: var(--fortinet-red-bright); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.secondary {
+    background: transparent;
+    color: var(--text-bright);
+    border: 1px solid var(--border-hi);
+}
+button.secondary:hover {
+    background: var(--bg-card-hi);
+    border-color: var(--fortinet-red);
+}
+button.danger {
+    background: var(--bad);
+}
+button.small {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.85rem;
+}
+button.copy, button.copy-mini {
+    background: var(--bg-card-hi);
+    color: var(--text-dim);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    margin-left: 0.4rem;
+}
+button.copy:hover, button.copy-mini:hover {
+    color: var(--fortinet-red);
+    background: var(--bg-card);
+}
+
+.muted { color: var(--text-dim); }
+.error { color: var(--bad); margin-top: 0.5rem; }
+.small { font-size: 0.85rem; }
+
+code {
+    background: var(--bg-dark);
+    color: var(--fortinet-red-bright);
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-family: "SF Mono", Consolas, monospace;
+}
+pre {
+    background: var(--bg-dark);
+    color: var(--text-bright);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    border: 1px solid var(--border);
+}
+
+/* ============================================================ tooltip on ? */
+
+.hint {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 50%;
+    background: var(--bg-card-hi);
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    margin-left: 0.4rem;
+    cursor: help;
+    user-select: none;
+}
+.hint:hover {
+    background: var(--fortinet-red);
+    color: #fff;
+}
+
+.tooltip {
+    position: fixed;
+    background: #000;
+    color: #fff;
+    border: 1px solid var(--fortinet-red);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    max-width: 280px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+
+/* ============================================================ stepper */
+
+.stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2rem;
+    background: var(--bg-card);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+.step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-dim);
+    position: relative;
+}
+.step:not(:last-child)::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 0.75rem;
+}
+.step .num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 2px solid var(--border-hi);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.step .label { font-size: 0.9rem; }
+.step.active .num,
+.step.done .num {
+    background: var(--fortinet-red);
+    border-color: var(--fortinet-red);
+    color: #fff;
+}
+.step.active { color: var(--text-bright); font-weight: 600; }
+.step.done { color: var(--ok); }
+.step.done .num { background: var(--ok); border-color: var(--ok); }
+
+/* ============================================================ wizard panels */
+
+.preview-path {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-dark);
+    border-left: 3px solid var(--fortinet-red);
+    border-radius: 4px;
+}
+
+.token-row {
+    display: flex;
+    gap: 0.5rem;
+}
+.token-row input { flex: 1; font-family: "SF Mono", Consolas, monospace; }
+.token-row button { flex-shrink: 0; }
+
+/* ============================================================ provider grid */
+
+.provider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+.provider-card {
+    padding: 1rem;
+    background: var(--bg-dark);
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.provider-card:hover {
+    border-color: var(--border-hi);
+    background: var(--bg-card-hi);
+}
+.provider-card.selected {
+    border-color: var(--fortinet-red);
+    background: rgba(238,0,0,0.08);
+}
+.provider-card h4 { margin: 0 0 0.5rem 0; color: var(--text-bright); }
+.provider-card .key-hint {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin: 0.5rem 0 0;
+}
+.provider-detail { margin-top: 1rem; }
+
+/* ============================================================ policy cards */
+
+.policy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.policy-card {
+    padding: 1.25rem;
+    background: var(--bg-dark);
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.policy-card:hover { border-color: var(--border-hi); }
+.policy-card.selected {
+    border-color: var(--fortinet-red);
+    background: rgba(238,0,0,0.08);
+}
+.policy-card h4 { margin: 0 0 0.5rem 0; }
+.policy-card p { margin: 0.5rem 0; font-size: 0.95rem; }
+
+.custom-panel table {
+    width: 100%;
+    margin-top: 1rem;
+}
+.custom-panel th {
+    background: var(--bg-dark);
+    color: var(--text-bright);
+    border-bottom: 2px solid var(--fortinet-red);
+}
+.custom-panel td { padding: 0.6rem 0.5rem; vertical-align: top; }
+
+/* ============================================================ review */
+
+.review-table { width: 100%; }
+.review-table th {
+    text-align: left;
+    padding: 0.6rem 0.75rem 0.6rem 0;
+    color: var(--text-dim);
+    font-weight: 500;
+    width: 25%;
+}
+.review-table td { padding: 0.6rem 0; }
+
+details { margin-top: 1rem; }
+details summary { cursor: pointer; color: var(--fortinet-red); }
+details pre { margin-top: 0.5rem; max-height: 400px; overflow: auto; }
+
+/* ============================================================ success card */
+
+.success-card { border-color: var(--ok); }
+.success-card header h3 { color: var(--ok); }
+
+.kv {
+    background: var(--bg-dark);
+    border-radius: 4px;
+    padding: 0.5rem 0;
+}
+.kv > div {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    gap: 0.75rem;
+    padding: 0.4rem 1rem;
+    align-items: center;
+}
+.kv .k {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+}
+
+.smoke-result {
+    max-height: 240px;
+    overflow: auto;
+    font-size: 0.78rem;
+    margin-top: 0.75rem;
+}
+
+/* ============================================================ dashboard table */
+
+.tenants-table {
+    width: 100%;
+}
+.tenants-table th {
+    background: var(--bg-dark);
+    color: var(--text-bright);
+    border-bottom: 2px solid var(--fortinet-red);
+    text-align: left;
+    padding: 0.7rem 0.75rem;
+}
+.tenants-table td {
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+.tenants-table tr:hover { background: var(--bg-card-hi); }
+.path-cell {
+    word-break: break-all;
+    font-size: 0.8rem;
+}
+
+.smoke-panel {
+    background: var(--bg-dark);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+    border: 1px solid var(--border);
+}
+
+/* ============================================================ connect gate */
+
+.connect-gate {
+    max-width: 540px;
+    margin: 4rem auto 0;
+}
+
+/* ============================================================ responsive */
+
+@media (max-width: 768px) {
+    .row, .policy-grid { grid-template-columns: 1fr; }
+    .topbar { flex-wrap: wrap; }
+}

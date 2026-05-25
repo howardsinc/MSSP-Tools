@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FortiAIGate Onboarder</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+    <script defer src="/static/js/app.js"></script>
+</head>
+<body x-data="appState()" x-init="init()">
+
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-red">Forti</span><span>AIGate</span>
+        <span class="brand-sub">Onboarder</span>
+    </div>
+    <nav class="tabs">
+        <button :class="{active: tab==='wizard'}" @click="tab='wizard'; resetWizard()">+ Onboard New</button>
+        <button :class="{active: tab==='dashboard'}" @click="tab='dashboard'; loadTenants()">Tenants</button>
+        <button :class="{active: tab==='settings'}" @click="tab='settings'">Settings</button>
+    </nav>
+    <div class="conn-pill" :class="{ok: connected, bad: !connected}">
+        <span class="dot"></span>
+        <span x-text="connected ? gatewayUrl : 'Not connected'"></span>
+        <button class="link" x-show="connected" @click="disconnect()">disconnect</button>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- Connection gate: if not connected, show only the connect form -->
+    <section class="connect-gate" x-show="!connected" x-cloak>
+        <article>
+            <header><h2>Connect to your FortiAIGate gateway</h2></header>
+            <p class="muted">
+                The onboarder is a local tool. Enter your gateway URL and admin
+                credentials to begin. Credentials are NOT saved — only the
+                gateway URL is remembered for next launch.
+            </p>
+            <form @submit.prevent="connect()">
+                <label>
+                    Gateway URL
+                    <input type="text" x-model="connectForm.gateway_url" placeholder="https://192.168.215.22:8443" required>
+                    <small>Self-signed certs are accepted (this is a private-LAN admin tool).</small>
+                </label>
+                <div class="row">
+                    <label>
+                        Admin username
+                        <input type="text" x-model="connectForm.username" required>
+                    </label>
+                    <label>
+                        Admin password
+                        <input type="password" x-model="connectForm.password" required>
+                    </label>
+                </div>
+                <button type="submit" :aria-busy="connecting" :disabled="connecting">
+                    <span x-show="!connecting">Connect →</span>
+                    <span x-show="connecting">Connecting…</span>
+                </button>
+                <p class="error" x-show="connectError" x-text="connectError"></p>
+            </form>
+            <footer class="muted small">
+                <strong>Source:</strong> <code>api/reference/01-auth.md</code> — cookie session + CSRF token captured from <code>POST /api/login</code>.
+            </footer>
+        </article>
+    </section>
+
+    <!-- ============================================================ WIZARD -->
+    <section x-show="connected && tab==='wizard'" x-cloak>
+        <div class="stepper">
+            <template x-for="(s, i) in stepLabels" :key="i">
+                <div class="step" :class="{active: wizardStep===i+1, done: wizardStep>i+1}">
+                    <span class="num" x-text="i+1"></span>
+                    <span class="label" x-text="s"></span>
+                </div>
+            </template>
+        </div>
+
+        <!-- Step 1: Customer details -->
+        <article x-show="wizardStep===1">
+            <header><h3>1 — Customer Details</h3></header>
+            <label>
+                Customer name <span class="hint" data-tip="Used as a slug. Becomes the Guard + Flow object names in FortiAIGate.">?</span>
+                <input type="text" x-model="wiz.customer_name" @input="autoSuggestPrefix()" placeholder="customer-1-acme">
+            </label>
+            <div class="row">
+                <label>
+                    Path prefix <span class="hint" data-tip="The tenant-visible segment of the API path. Becomes part of the customer's URL.">?</span>
+                    <input type="text" x-model="wiz.path_prefix" placeholder="customer1">
+                </label>
+                <label>
+                    Secret token <span class="hint" data-tip="Unguessable per-tenant string. Acts as the API key in 8.0.0 (per-Flow Bearer ships in 8.0.2).">?</span>
+                    <div class="token-row">
+                        <input type="text" x-model="wiz.secret_token" readonly>
+                        <button type="button" class="secondary" @click="regenToken()">↻ regen</button>
+                    </div>
+                </label>
+            </div>
+            <div class="preview-path">
+                Generated URL: <code x-text="generatedUrl()"></code>
+            </div>
+            <footer>
+                <button class="secondary" @click="tab='dashboard'">← Cancel</button>
+                <button @click="wizardStep=2" :disabled="!wiz.customer_name || !wiz.path_prefix || !wiz.secret_token">Next →</button>
+            </footer>
+            <small class="muted">
+                <strong>Source:</strong> Lab-verified — paths must start with <code>/v1/</code> (Known Issue 1213070). Secret-in-path is the v8.0.0 isolation model.
+            </small>
+        </article>
+
+        <!-- Step 2: Pick upstream provider -->
+        <article x-show="wizardStep===2">
+            <header><h3>2 — Pick the Upstream LLM</h3></header>
+            <div class="provider-grid">
+                <template x-for="(p, id) in providers" :key="id">
+                    <div class="provider-card" :class="{selected: wiz.provider_id===id}" @click="selectProvider(id)">
+                        <h4 x-text="p.label"></h4>
+                        <p class="muted small" x-text="p.notes || ''"></p>
+                        <p class="key-hint" x-text="p.key_hint"></p>
+                    </div>
+                </template>
+            </div>
+
+            <div x-show="wiz.provider_id" class="provider-detail">
+                <hr>
+                <label>
+                    Model
+                    <select x-model="wiz.model" x-show="currentProvider().models.length > 0">
+                        <option value="">(pick one)</option>
+                        <template x-for="m in currentProvider().models" :key="m">
+                            <option :value="m" x-text="m"></option>
+                        </template>
+                    </select>
+                    <input type="text" x-model="wiz.model" x-show="currentProvider().models.length === 0" placeholder="e.g. deepseek-chat">
+                </label>
+
+                <label x-show="currentProvider().supports_private_endpoint || !currentProvider().endpoint">
+                    Endpoint URL
+                    <input type="text" x-model="wiz.endpoint" :placeholder="currentProvider().endpoint_hint || currentProvider().endpoint || 'https://...'">
+                    <small x-show="privateEndpointActive()" class="warn">
+                        privateEndpointEnabled=true will be set (endpoint differs from provider default).
+                    </small>
+                </label>
+
+                <label x-show="!currentProvider().needs_aws_creds">
+                    Upstream API key
+                    <input type="password" x-model="wiz.upstream_key" :placeholder="currentProvider().key_format">
+                </label>
+
+                <div x-show="currentProvider().needs_aws_creds">
+                    <label>AWS Access Key ID
+                        <input type="text" x-model="wiz.aws_access_key_id">
+                    </label>
+                    <label>AWS Secret Access Key
+                        <input type="password" x-model="wiz.aws_secret_access_key">
+                    </label>
+                    <label>AWS Region
+                        <input type="text" x-model="wiz.aws_region" placeholder="us-east-1">
+                    </label>
+                </div>
+            </div>
+
+            <footer>
+                <button class="secondary" @click="wizardStep=1">← Back</button>
+                <button @click="wizardStep=3" :disabled="!canAdvanceStep2()">Next →</button>
+            </footer>
+            <small class="muted">
+                <strong>Source:</strong> <code>api/reference/04-providers.md</code> — executor + endpoint mapping. <code>privateEndpointEnabled</code> auto-detected (GLM gotcha, lab-verified).
+            </small>
+        </article>
+
+        <!-- Step 3: Protection profile -->
+        <article x-show="wizardStep===3">
+            <header><h3>3 — Protection Profile</h3></header>
+            <div class="policy-grid">
+                <div class="policy-card" :class="{selected: wiz.policy==='alert'}" @click="wiz.policy='alert'">
+                    <h4>👁 Trust + Alert</h4>
+                    <p>All scanners run, but no traffic is blocked. Detections logged to UI for visibility.</p>
+                    <small>Use for: monitoring, demos, low-risk customers, pilot rollouts.</small>
+                </div>
+                <div class="policy-card" :class="{selected: wiz.policy==='strict-block'}" @click="wiz.policy='strict-block'">
+                    <h4>🛡 Strict Block</h4>
+                    <p>Prompt Injection + DLP set to <code>alert&deny</code>. Toxicity stays alert.</p>
+                    <small>Use for: HIPAA, PCI, regulated workloads, customer trust requirements.</small>
+                </div>
+                <div class="policy-card" :class="{selected: wiz.policy==='custom'}" @click="wiz.policy='custom'">
+                    <h4>⚙ Custom</h4>
+                    <p>Per-scanner toggles + per-scanner action (alert vs alert&deny).</p>
+                    <small>Use for: advanced customers, vertical-specific tuning.</small>
+                </div>
+            </div>
+
+            <div x-show="wiz.policy==='custom'" class="custom-panel">
+                <hr>
+                <h4>Per-scanner config</h4>
+                <table>
+                    <thead>
+                        <tr><th>Scanner</th><th>OWASP</th><th>Enabled</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="(info, name) in scannerInfo" :key="name">
+                            <tr>
+                                <td>
+                                    <strong x-text="info.label"></strong>
+                                    <small class="muted block" x-text="info.description"></small>
+                                </td>
+                                <td x-text="info.owasp"></td>
+                                <td><input type="checkbox" x-model="wiz.custom.enabled[name]"></td>
+                                <td>
+                                    <select x-show="['promptInjection','dataLeak','toxicity'].includes(name)"
+                                            x-model="wiz.custom['action_' + (name==='promptInjection' ? 'pi' : name==='dataLeak' ? 'dlp' : 'tox')]">
+                                        <option value="alert">alert (log)</option>
+                                        <option value="alert&deny">alert&deny (block)</option>
+                                    </select>
+                                    <span x-show="!['promptInjection','dataLeak','toxicity'].includes(name)" class="muted">alert</span>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer>
+                <button class="secondary" @click="wizardStep=2">← Back</button>
+                <button @click="wizardStep=4">Next →</button>
+            </footer>
+            <small class="muted">
+                <strong>Source:</strong> Lab-verified scanner config dumped from <code>claude-anthropic-guard</code> on 2026-05-19. Action values <code>alert</code> / <code>alert&deny</code> are gateway-canonical.
+            </small>
+        </article>
+
+        <!-- Step 4: Review -->
+        <article x-show="wizardStep===4">
+            <header><h3>4 — Review & Confirm</h3></header>
+            <table class="review-table">
+                <tr><th>Customer name</th><td x-text="wiz.customer_name"></td></tr>
+                <tr><th>Tenant URL</th><td><code x-text="generatedUrl()"></code></td></tr>
+                <tr><th>Upstream provider</th><td x-text="currentProvider().label + ' (' + currentProvider().executor + ')'"></td></tr>
+                <tr><th>Model</th><td x-text="wiz.model"></td></tr>
+                <tr><th>Endpoint</th><td><code x-text="wiz.endpoint || currentProvider().endpoint"></code></td></tr>
+                <tr><th>privateEndpointEnabled</th><td x-text="privateEndpointActive() ? 'true' : 'false'"></td></tr>
+                <tr><th>Policy</th><td x-text="wiz.policy"></td></tr>
+            </table>
+
+            <details>
+                <summary>View JSON that will be POSTed</summary>
+                <pre x-text="JSON.stringify(buildCreatePayload(), null, 2)"></pre>
+            </details>
+
+            <footer>
+                <button class="secondary" @click="wizardStep=3">← Back</button>
+                <button @click="createTenant()" :aria-busy="creating" :disabled="creating">
+                    <span x-show="!creating">🚀 Create Tenant</span>
+                    <span x-show="creating">Creating Guard + Flow…</span>
+                </button>
+            </footer>
+            <p class="error" x-show="createError" x-text="createError"></p>
+        </article>
+
+        <!-- Step 5: Success -->
+        <article x-show="wizardStep===5" class="success-card">
+            <header><h3>✓ Tenant Created</h3></header>
+            <p class="muted" x-text="'Customer ' + (createdTenant?.customer_name || '') + ' is live on the gateway.'"></p>
+
+            <h4>Customer-facing config</h4>
+            <div class="kv">
+                <div><span class="k">URL</span><code x-text="createdTenant?.url"></code><button class="copy" @click="copy(createdTenant.url)">copy</button></div>
+                <div><span class="k">Bearer token</span><code>(global API key from Settings → API Keys)</code></div>
+                <div><span class="k">Model</span><code x-text="createdTenant?.model"></code></div>
+            </div>
+
+            <h4>Backend (for your records)</h4>
+            <div class="kv">
+                <div><span class="k">Guard UUID</span><code x-text="createdTenant?.guard_uuid"></code></div>
+                <div><span class="k">Flow UUID</span><code x-text="createdTenant?.flow_uuid"></code></div>
+                <div><span class="k">Policy</span><code x-text="createdTenant?.policy"></code></div>
+            </div>
+
+            <h4>Smoke test</h4>
+            <div class="row">
+                <button class="secondary" @click="runSmokeTest('benign')" :aria-busy="smokeRunning">
+                    Run benign probe
+                </button>
+                <button class="secondary" @click="runSmokeTest('injection')" :aria-busy="smokeRunning">
+                    Run injection probe
+                </button>
+                <button class="secondary" @click="runSmokeTest('pii')" :aria-busy="smokeRunning">
+                    Run PII probe (SSN)
+                </button>
+            </div>
+            <pre x-show="smokeResult" x-text="JSON.stringify(smokeResult, null, 2)" class="smoke-result"></pre>
+
+            <h4>Download / share</h4>
+            <div class="row">
+                <button class="secondary" @click="downloadEnv()">⬇ Download .env</button>
+                <button class="secondary" @click="copyCurl()">⧉ Copy curl example</button>
+                <button class="secondary" @click="mailtoCustomer()">✉ Email to customer</button>
+            </div>
+
+            <footer>
+                <button class="secondary" @click="tab='dashboard'; loadTenants()">Go to Tenants Dashboard →</button>
+                <button @click="resetWizard()">+ Onboard Another</button>
+            </footer>
+        </article>
+    </section>
+
+    <!-- ============================================================ DASHBOARD -->
+    <section x-show="connected && tab==='dashboard'" x-cloak>
+        <article>
+            <header>
+                <div class="row between">
+                    <h3>Tenants on <code x-text="gatewayUrl"></code></h3>
+                    <div>
+                        <button class="secondary" @click="loadTenants()" :aria-busy="loadingTenants">↻ Refresh</button>
+                        <button @click="tab='wizard'; resetWizard()">+ New Tenant</button>
+                    </div>
+                </div>
+            </header>
+
+            <p x-show="!loadingTenants && tenants.length === 0" class="muted">
+                No tenants yet. Click "+ New Tenant" to onboard your first customer.
+            </p>
+
+            <table x-show="tenants.length > 0" class="tenants-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Upstream</th>
+                        <th>Path</th>
+                        <th>Auth</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="t in tenants" :key="t.flow_uuid">
+                        <tr>
+                            <td>
+                                <strong x-text="t.flow_name?.replace('-flow', '') || ''"></strong>
+                                <small class="muted block" x-text="t.guard_name"></small>
+                            </td>
+                            <td>
+                                <code x-text="t.executor + ' / ' + t.model"></code>
+                                <small class="muted block" x-text="t.private_endpoint ? '(private endpoint)' : '(default endpoint)'"></small>
+                            </td>
+                            <td>
+                                <code class="path-cell" x-text="t.path"></code>
+                                <button class="copy-mini" @click="copy(gatewayUrl + t.path)" title="copy full URL">⧉</button>
+                            </td>
+                            <td>
+                                <span x-text="t.auth_enabled ? '🔒 yes' : '🔓 no'"></span>
+                            </td>
+                            <td>
+                                <button class="secondary small" @click="openSmokeFromDashboard(t)">smoke</button>
+                                <button class="danger small" @click="confirmDelete(t)">delete</button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+
+            <!-- Quick smoke test from dashboard -->
+            <div x-show="dashboardSmokeTenant" class="smoke-panel">
+                <hr>
+                <h4>Quick smoke: <code x-text="dashboardSmokeTenant?.flow_name"></code></h4>
+                <label>Global Bearer (FortiAIGate sk- key)
+                    <input type="password" x-model="dashboardBearer" placeholder="sk-...">
+                </label>
+                <div class="row">
+                    <button class="secondary" @click="runDashboardSmoke('benign')" :aria-busy="dashSmokeRunning">benign</button>
+                    <button class="secondary" @click="runDashboardSmoke('injection')" :aria-busy="dashSmokeRunning">injection</button>
+                    <button class="secondary" @click="runDashboardSmoke('pii')" :aria-busy="dashSmokeRunning">PII</button>
+                    <button @click="dashboardSmokeTenant=null">close</button>
+                </div>
+                <pre x-show="dashboardSmokeResult" x-text="JSON.stringify(dashboardSmokeResult, null, 2)" class="smoke-result"></pre>
+            </div>
+        </article>
+    </section>
+
+    <!-- ============================================================ SETTINGS -->
+    <section x-show="connected && tab==='settings'" x-cloak>
+        <article>
+            <header><h3>Settings</h3></header>
+            <p class="muted">
+                Local settings stored at <code id="config-path-display">%APPDATA%\FortiAIGate-Onboarder\config.json</code>.
+                Passwords are never saved — only the gateway URL is persisted.
+            </p>
+            <form @submit.prevent="saveSettings()">
+                <label>Default gateway URL
+                    <input type="text" x-model="settings.gateway_url">
+                </label>
+                <label>Default admin username
+                    <input type="text" x-model="settings.admin_username">
+                </label>
+                <button type="submit">Save</button>
+                <span class="muted" x-show="settingsSaved">✓ saved</span>
+            </form>
+            <hr>
+            <p class="muted small">
+                Onboarder version: 0.1.0 — Source: <a href="https://github.com/howardsinc3753/MSSP-Tools/tree/main/FortiAIGate-Onboarder" target="_blank">github.com/howardsinc3753/MSSP-Tools/FortiAIGate-Onboarder</a>
+            </p>
+        </article>
+    </section>
+
+</main>
+
+<!-- Tooltip element (positioned by JS) -->
+<div class="tooltip" x-show="tooltip.show" :style="`top:${tooltip.y}px; left:${tooltip.x}px`" x-text="tooltip.text" x-cloak></div>
+
+</body>
+</html>
