@@ -32,11 +32,16 @@ env/
 *.swo
 *~
 
-# Credentials - NEVER COMMIT!
+# Credentials - NEVER COMMIT! (incl. scratch/backup variants)
 credentials.json
+credentials.json.*
+credentials*.json
+!credentials.example.json
 config.json
 *.key
 *.pem
+*.new
+*.bak
 
 # Logs
 *.log

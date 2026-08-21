@@ -1,0 +1,10 @@
+# Terraform state & vars (may contain secrets) — commit only the .example
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+tfplan
+crash*.log
+*.tfvars
+!*.tfvars.example
+*.pem

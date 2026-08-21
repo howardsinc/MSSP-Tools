@@ -1,0 +1,17 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is gitignored.
+
+# --- Required ---
+admin_password = "CHANGE-ME-strong"     # FortiGate admin password (8+ chars)
+admin_cidr     = "203.0.113.10/32"      # YOUR public IP /32 (curl ifconfig.me) — don't leave 0.0.0.0/0
+
+# --- Optional overrides (defaults shown) ---
+# aws_region        = "us-east-1"
+# availability_zone = "us-east-1a"
+# fortios_version   = "7.6.7"
+# architecture      = "arm64"           # arm64 -> t4g.* ; x86_64 -> t3/c5.*
+# instance_type     = "t4g.medium"      # >= 4 GiB recommended
+# hostname          = "fortigate-vm"
+# key_pair_name     = ""                # optional — FortiGate login is the admin password
+# vpc_cidr          = "10.0.0.0/16"
+# wan_subnet_cidr   = "10.0.1.0/24"
+# lan_subnet_cidr   = "10.0.2.0/24"

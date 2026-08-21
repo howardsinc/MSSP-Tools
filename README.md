@@ -140,6 +140,26 @@ AI-powered FortiGate diagnostics CLI using Claude's agentic tool-use. NOC engine
 
 ---
 
+### [FortiGate-VM on AWS — Terraform](FortiGate-AWS-Terraform/)
+**Status:** ✅ Partner-ready
+
+Stand up a **FortiGate-VM (BYOL)** on AWS with Terraform in ~3 minutes. The FortiOS AMI is **resolved live from the Fortinet-owned catalog** — no hardcoded AMI IDs — so it works in any region and always lands on the current GA build.
+
+**Key Features:**
+- Live AMI lookup (owner `679593333241`) — the `" build"` name filter selects **BYOL over PAYG** automatically
+- Dual-NIC FortiGate (WAN + LAN) + Elastic IP, one VPC, up in a single `terraform apply`
+- Admin GUI/SSH locked to your IP; `tfvars`/state kept out of git
+- Any FortiOS version, arm64 or x86_64, via variables
+
+**Use Cases:**
+- Partner/customer self-serve FortiGate-VM PoC in their **own** AWS account
+- Spin up a lab FortiGate for testing, then `terraform destroy`
+- Reference for the BYOL Marketplace subscription + AMI-lookup pattern
+
+[📖 View Documentation →](FortiGate-AWS-Terraform/)
+
+---
+
 ## 🚀 Coming Soon
 
 More MSSP tools are in development:
