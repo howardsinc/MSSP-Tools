@@ -160,6 +160,27 @@ Stand up a **FortiGate-VM (BYOL)** on AWS with Terraform in ~3 minutes. The Fort
 
 ---
 
+### [Markdown Converter](Markdown-Converter/)
+**Status:** ✅ Production Ready
+
+A **single-file, zero-install** Markdown → PDF / Word converter. One self-contained HTML page — double-click it, drag a `.md` file in, and save a presentable PDF or Word doc. Built for locked-down corporate PCs where you can't install anything.
+
+**Key Features:**
+- 100% client-side — documents never leave your PC, safe for internal content
+- Drag & drop, file picker, or paste-to-render with live preview
+- Print / Save as PDF with print-optimized GitHub-style formatting
+- One-click Word (.doc) export with styled headings, tables, and code blocks
+- Host it on a LAN with one `python -m http.server` command, or just double-click the file
+
+**Use Cases:**
+- Turn Markdown study guides, runbooks, and one-pagers into shareable documents
+- Convert docs on machines with no admin rights (no pandoc/LaTeX needed)
+- Drop on an intranet page as a self-serve team utility
+
+[📖 View Documentation →](Markdown-Converter/)
+
+---
+
 ## 🚀 Coming Soon
 
 More MSSP tools are in development:
