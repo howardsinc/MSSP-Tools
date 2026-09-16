@@ -31,7 +31,7 @@ The launcher will install everything else (uv → Python 3.11+ → deps) on firs
 
 ### Run
 ```cmd
-git clone https://github.com/howardsinc3753/MSSP-Tools.git
+git clone https://github.com/howardsinc/MSSP-Tools.git
 cd MSSP-Tools\FortiAIGate-Onboarder
 start.bat
 ```
@@ -97,7 +97,7 @@ session 2026-05-13. This tool will pick that up automatically once the
 gateway exposes the `FlowDTO.authentication.allowedKeys` field.
 
 Source of truth for the underlying API shape: the
-[FortiAIGate SDK](https://github.com/howardsinc3753/FortiAIGate-SDK)
+[FortiAIGate SDK](https://github.com/howardsinc/FortiAIGate-SDK)
 sibling repo, especially `api/reference/02-flows.md` and
 `api/examples/05-onboard-tenant.sh`.
 

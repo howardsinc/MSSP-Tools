@@ -224,7 +224,7 @@ These are community-maintained tools. For issues or questions:
 ### Reporting Bugs
 Found a bug? Help us improve! Please open a GitHub Issue with:
 
-1. **Go to:** https://github.com/howardsinc3753/MSSP-Tools/issues
+1. **Go to:** https://github.com/howardsinc/MSSP-Tools/issues
 2. **Click:** "New Issue"
 3. **Include:**
    - Tool name (e.g., "FortiBot NOC-CLI", "SOCaaS SDK", "FortiFlex MSSP Toolkit", "FortiGate Monitor", "FortiZTP SDK")
@@ -235,7 +235,7 @@ Found a bug? Help us improve! Please open a GitHub Issue with:
    - Error messages or logs (remove any credentials!)
 
 ### Other Support
-- **Feature requests:** Submit via [GitHub Issues](https://github.com/howardsinc3753/MSSP-Tools/issues)
+- **Feature requests:** Submit via [GitHub Issues](https://github.com/howardsinc/MSSP-Tools/issues)
 - **Fortinet product support:** Contact [Fortinet TAC](https://support.fortinet.com) (not responsible for these tools)
 - **General MSSP questions:** Engage with the Fortinet community forums
 

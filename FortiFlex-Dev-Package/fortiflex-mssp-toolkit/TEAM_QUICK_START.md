@@ -1,6 +1,6 @@
 # Team Quick Start Guide - FortiFlex MSSP Toolkit
 
-**Repository:** https://github.com/howardsinc3753/MSSP-Tools
+**Repository:** https://github.com/howardsinc/MSSP-Tools
 **Status:** ✅ Live on GitHub (November 10, 2025)
 
 ---
@@ -20,16 +20,16 @@ The complete FortiFlex MSSP Automation Toolkit is now live! This includes:
 ## 📝 How to Report Bugs
 
 ### Quick Link
-**🐛 Report a Bug:** https://github.com/howardsinc3753/MSSP-Tools/issues
+**🐛 Report a Bug:** https://github.com/howardsinc/MSSP-Tools/issues
 
 ### Step-by-Step Process
 
 1. **Check First:**
    - Review [BUGFIX_USE_CASES.md](BUGFIX_USE_CASES.md) for known issues
-   - Search [existing issues](https://github.com/howardsinc3753/MSSP-Tools/issues)
+   - Search [existing issues](https://github.com/howardsinc/MSSP-Tools/issues)
 
 2. **Create New Issue:**
-   - Go to: https://github.com/howardsinc3753/MSSP-Tools/issues
+   - Go to: https://github.com/howardsinc/MSSP-Tools/issues
    - Click: "New Issue"
    - Use clear title: e.g., "Use Case 5: Suspension fails for PENDING devices"
 
@@ -93,7 +93,7 @@ The complete FortiFlex MSSP Automation Toolkit is now live! This includes:
    ```
 
 5. **Create Pull Request:**
-   - Go to: https://github.com/howardsinc3753/MSSP-Tools
+   - Go to: https://github.com/howardsinc/MSSP-Tools
    - Click "Compare & pull request"
    - Fill out the PR template
    - Wait for review
@@ -127,10 +127,10 @@ The complete FortiFlex MSSP Automation Toolkit is now live! This includes:
 ## 🎯 Quick Links for Team
 
 ### For Developers
-- **Clone repo:** `git clone https://github.com/howardsinc3753/MSSP-Tools.git`
-- **Report bug:** https://github.com/howardsinc3753/MSSP-Tools/issues
+- **Clone repo:** `git clone https://github.com/howardsinc/MSSP-Tools.git`
+- **Report bug:** https://github.com/howardsinc/MSSP-Tools/issues
 - **Submit PR:** See [CONTRIBUTING.md](CONTRIBUTING.md)
-- **View code:** https://github.com/howardsinc3753/MSSP-Tools/tree/main/FortiFlex-Dev-Package/fortiflex-mssp-toolkit
+- **View code:** https://github.com/howardsinc/MSSP-Tools/tree/main/FortiFlex-Dev-Package/fortiflex-mssp-toolkit
 
 ### For Users
 - **Getting Started:** [GETTING_STARTED.md](documentation/GETTING_STARTED.md)
@@ -139,9 +139,9 @@ The complete FortiFlex MSSP Automation Toolkit is now live! This includes:
 - **Credentials Setup:** [CREDENTIALS_SETUP.md](documentation/CREDENTIALS_SETUP.md)
 
 ### For Partners/Customers
-- **Main README:** https://github.com/howardsinc3753/MSSP-Tools/blob/main/FortiFlex-Dev-Package/fortiflex-mssp-toolkit/README.md
+- **Main README:** https://github.com/howardsinc/MSSP-Tools/blob/main/FortiFlex-Dev-Package/fortiflex-mssp-toolkit/README.md
 - **Product Catalog:** [PRODUCT_TYPE_REFERENCE.md](examples/PRODUCT_TYPE_REFERENCE.md)
-- **Bug Reporting:** https://github.com/howardsinc3753/MSSP-Tools/issues
+- **Bug Reporting:** https://github.com/howardsinc/MSSP-Tools/issues
 
 ---
 
@@ -216,7 +216,7 @@ git push origin feature/your-work
 - **Feature idea:** Create a GitHub Issue with "enhancement" label
 
 ### External Users
-- **Issues:** https://github.com/howardsinc3753/MSSP-Tools/issues
+- **Issues:** https://github.com/howardsinc/MSSP-Tools/issues
 - **Fortinet Support:** https://support.fortinet.com (for API/product issues)
 
 ---
@@ -241,10 +241,10 @@ git push origin feature/your-work
 
 **Daniel Howard**
 MSSP Solutions Engineer, Fortinet
-GitHub: [@howardsinc3753](https://github.com/howardsinc3753)
+GitHub: [@howardsinc](https://github.com/howardsinc)
 
 ---
 
 **Last Updated:** November 10, 2025
-**Repository:** https://github.com/howardsinc3753/MSSP-Tools
+**Repository:** https://github.com/howardsinc/MSSP-Tools
 **Toolkit Path:** `/FortiFlex-Dev-Package/fortiflex-mssp-toolkit/`

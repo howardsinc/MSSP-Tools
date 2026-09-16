@@ -573,7 +573,7 @@ fortiflex-mssp-toolkit/
 
 This is a community toolkit for partner use:
 
-1. **Toolkit issues:** Open a [GitHub issue](https://github.com/howardsinc3753/MSSP-Tools/issues)
+1. **Toolkit issues:** Open a [GitHub issue](https://github.com/howardsinc/MSSP-Tools/issues)
 2. **FortiFlex API:** See [FortiFlex Documentation](https://docs.fortinet.com/document/flex-vm/)
 3. **Fortinet product support:** Contact [Fortinet TAC](https://support.fortinet.com)
 
@@ -595,7 +595,7 @@ Found a bug or have a feature request? Please help us improve!
 
 ### How to Report a Bug
 
-1. **Visit:** https://github.com/howardsinc3753/MSSP-Tools/issues
+1. **Visit:** https://github.com/howardsinc/MSSP-Tools/issues
 2. **Click:** "New Issue"
 3. **Include in your report:**
    - **Tool:** "FortiFlex MSSP Toolkit"
@@ -616,7 +616,7 @@ Before reporting, check [BUGFIX_USE_CASES.md](BUGFIX_USE_CASES.md) for known iss
 
 ### Feature Requests
 
-Have an idea for improvement? Submit it via [GitHub Issues](https://github.com/howardsinc3753/MSSP-Tools/issues) with the "enhancement" label.
+Have an idea for improvement? Submit it via [GitHub Issues](https://github.com/howardsinc/MSSP-Tools/issues) with the "enhancement" label.
 
 ---
 

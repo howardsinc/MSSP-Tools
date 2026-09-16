@@ -48,7 +48,7 @@ You need a REST API token from your FortiGate before starting. This takes about 
 ### Install
 
 ```bash
-git clone https://github.com/howardsinc3753/MSSP-Tools.git
+git clone https://github.com/howardsinc/MSSP-Tools.git
 cd MSSP-Tools/FortiBot-NOC-CLI
 pip install .
 ```

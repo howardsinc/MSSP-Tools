@@ -72,10 +72,10 @@ AWS will **block the deployment** unless you've clicked "subscribe" to the Forti
 ### Step 5 — Download these files
 - If you have `git`:
   ```
-  git clone https://github.com/howardsinc3753/MSSP-Tools.git
+  git clone https://github.com/howardsinc/MSSP-Tools.git
   cd MSSP-Tools/FortiGate-AWS-Terraform
   ```
-- **No git?** Go to https://github.com/howardsinc3753/MSSP-Tools → green **Code** button → **Download ZIP** → unzip it → open a terminal **inside** the `FortiGate-AWS-Terraform` folder.
+- **No git?** Go to https://github.com/howardsinc/MSSP-Tools → green **Code** button → **Download ZIP** → unzip it → open a terminal **inside** the `FortiGate-AWS-Terraform` folder.
 
 ### Step 6 — Enter your 2 settings
 First, make your own copy of the settings file:
@@ -153,7 +153,7 @@ Type **`yes`** when asked. That's it — everything is gone.
 | GUI won't load but SSH works | Give it another 2–3 minutes to finish booting, then refresh. |
 | Forgot the admin password | Run `terraform destroy` then `terraform apply` to start fresh, or reset via the AWS EC2 serial console. |
 
-**Need help?** Open an issue at https://github.com/howardsinc3753/MSSP-Tools/issues (never paste passwords or keys).
+**Need help?** Open an issue at https://github.com/howardsinc/MSSP-Tools/issues (never paste passwords or keys).
 
 ---
 

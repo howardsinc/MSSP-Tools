@@ -11,11 +11,11 @@ Found a bug? Help us fix it!
 ### Step 1: Check Existing Issues
 Before creating a new issue, please check:
 - **[Known Issues](BUGFIX_USE_CASES.md)** - Check if your issue is already documented
-- **[GitHub Issues](https://github.com/howardsinc3753/MSSP-Tools/issues)** - Search for similar reports
+- **[GitHub Issues](https://github.com/howardsinc/MSSP-Tools/issues)** - Search for similar reports
 
 ### Step 2: Create a Bug Report
 
-1. **Go to:** https://github.com/howardsinc3753/MSSP-Tools/issues
+1. **Go to:** https://github.com/howardsinc/MSSP-Tools/issues
 2. **Click:** "New Issue"
 3. **Title:** Use a clear, descriptive title
    - ✅ Good: "Use Case 1: Points calculation fails with nested response"
@@ -113,11 +113,11 @@ This worked last week. API response format may have changed.
 Have an idea for improvement?
 
 ### Step 1: Check Existing Requests
-Search [GitHub Issues](https://github.com/howardsinc3753/MSSP-Tools/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for similar requests.
+Search [GitHub Issues](https://github.com/howardsinc/MSSP-Tools/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for similar requests.
 
 ### Step 2: Create a Feature Request
 
-1. **Go to:** https://github.com/howardsinc3753/MSSP-Tools/issues
+1. **Go to:** https://github.com/howardsinc/MSSP-Tools/issues
 2. **Click:** "New Issue"
 3. **Add label:** "enhancement"
 4. **Include:**
@@ -148,7 +148,7 @@ Search [GitHub Issues](https://github.com/howardsinc3753/MSSP-Tools/issues?q=is%
 Want to contribute code? Awesome!
 
 ### Prerequisites
-- Fork the repository: https://github.com/howardsinc3753/MSSP-Tools
+- Fork the repository: https://github.com/howardsinc/MSSP-Tools
 - Clone your fork locally
 - Create a new branch for your changes
 
@@ -249,7 +249,7 @@ git push origin feature/your-feature-name
 ```
 
 Then:
-1. Go to https://github.com/howardsinc3753/MSSP-Tools
+1. Go to https://github.com/howardsinc/MSSP-Tools
 2. Click "Compare & pull request"
 3. Fill out the PR template:
 
@@ -384,8 +384,8 @@ cat .gitignore | grep credentials.json
 
 ## 📞 Questions?
 
-- **General questions:** Open a [Discussion](https://github.com/howardsinc3753/MSSP-Tools/discussions)
-- **Bug reports:** [Issues](https://github.com/howardsinc3753/MSSP-Tools/issues)
+- **General questions:** Open a [Discussion](https://github.com/howardsinc/MSSP-Tools/discussions)
+- **Bug reports:** [Issues](https://github.com/howardsinc/MSSP-Tools/issues)
 - **Security issues:** Email maintainers directly (see README)
 
 ---
