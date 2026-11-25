@@ -267,6 +267,96 @@ class FortiFlexClient:
         logger.debug(f"Payload: {payload}")
         return self._make_request("entitlements/cloud/create", payload)
 
+    def list_entitlements(self, account_id: Optional[int] = None,
+                          config_id: Optional[int] = None,
+                          serial_number: Optional[str] = None) -> Dict:
+        """
+        List entitlements (VM, hardware and cloud) under the program. Read-only.
+
+        Each row in result["entitlements"] carries serialNumber, status
+        (PENDING / ACTIVE / STOPPED / EXPIRED), configId, description,
+        startDate, endDate, accountId and, for VM entitlements, token and
+        tokenStatus (NOTUSED / USED).
+
+        Args:
+            account_id: Optional customer account ID. Omit to list every account.
+            config_id: Optional configuration ID filter
+            serial_number: Optional single serial number
+
+        Returns:
+            API response; the rows are in result["entitlements"]
+
+        Example:
+            rows = client.list_entitlements(config_id=12345)["entitlements"]
+            for e in rows:
+                print(e["serialNumber"], e["status"], e.get("description"))
+        """
+        payload: Dict = {"programSerialNumber": self.program_sn}
+
+        if account_id:
+            payload["accountId"] = account_id
+        if config_id:
+            payload["configId"] = config_id
+        if serial_number:
+            payload["serialNumber"] = serial_number
+
+        logger.info(f"Listing entitlements (account={account_id or 'ALL'}, "
+                    f"config={config_id or 'ALL'})")
+        return self._make_request("entitlements/list", payload)
+
+    def create_vm_entitlements(self, config_id: int, count: int = 1,
+                               description: Optional[str] = None,
+                               end_date: Optional[str] = None) -> Dict:
+        """
+        Create virtual-appliance entitlements (FortiGate-VM, FortiManager-VM,
+        FortiAnalyzer-VM, ...) together with their license tokens.
+
+        Uses entitlements/vm/create. A new entitlement starts PENDING and is not
+        billed until its token is applied on a device (FortiOS:
+        `execute vm-license <token>`); it then turns ACTIVE and bills daily.
+
+        Pick the right create call for the product:
+          - VM appliances            -> create_vm_entitlements (this method)
+          - Hardware with a serial   -> create_hardware_entitlements
+          - Cloud services           -> create_cloud_entitlements
+
+        Args:
+            config_id: Configuration ID whose product type is a VM
+            count: Number of entitlements to create (default 1)
+            description: Optional description stamped on each entitlement
+            end_date: Optional end date (YYYY-MM-DD). Omitted = program end date
+
+        Returns:
+            API response; result["entitlements"][i] carries serialNumber, token,
+            configId, status, startDate, endDate. Treat the token as a secret.
+        """
+        payload: Dict = {"configId": config_id, "count": count}
+
+        if description:
+            payload["description"] = description
+        if end_date:
+            payload["endDate"] = end_date
+
+        logger.info(f"Creating {count} VM entitlement(s) for config {config_id}")
+        return self._make_request("entitlements/vm/create", payload)
+
+    def get_vm_token(self, serial_number: str, regenerate: bool = False) -> Dict:
+        """
+        Fetch, or regenerate, the license token of one VM entitlement.
+
+        Uses entitlements/vm/token. Regenerating invalidates the previous token,
+        so only do that for a device that will be re-licensed.
+
+        Returns:
+            API response; result["entitlements"][0]["token"] is the token
+        """
+        payload: Dict = {"serialNumber": serial_number}
+        if regenerate:
+            payload["regenerateToken"] = True
+
+        logger.info(f"Fetching VM token for {serial_number} (regenerate={regenerate})")
+        return self._make_request("entitlements/vm/token", payload)
+
     def update_entitlement(self, serial_number: str, config_id: int,
                           description: Optional[str] = None,
                           end_date: Optional[str] = None) -> Dict:

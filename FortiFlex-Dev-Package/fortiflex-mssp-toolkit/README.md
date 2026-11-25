@@ -40,6 +40,8 @@ FortiFlex MSSP is Fortinet's flexible licensing program for Managed Security Ser
 
 **[Getting Started Guide](documentation/GETTING_STARTED.md)** - Complete onboarding guide
 
+**Using an AI coding agent (Claude Code, Codex, Cursor...)?** Point it at [CLAUDE.md](CLAUDE.md) and the agent skill [skills/fortiflex-mssp/SKILL.md](skills/fortiflex-mssp/SKILL.md): the API in one table, the client methods, and the read-first / plan-then-execute rules. Two read-only helpers go with it: `examples/list_configs.py` and `examples/list_entitlements.py`; `examples/create_vm_entitlements.py` creates VM licenses and does nothing without `--execute`.
+
 The Getting Started guide walks you through:
 1. ✅ Getting your FortiFlex API credentials
 2. ✅ Configuring the toolkit (most important step!)
